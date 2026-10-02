@@ -189,9 +189,6 @@ module load gcc/11.4.0
 source /path/to/conda/etc/profile.d/conda.sh
 conda activate <env>
 
-export HF_HOME=/scratch/${USER}/hf_cache
-export WANDB_PROJECT=gemma3_12b_anti_deception_opd
-export WANDB_API_KEY="<your_wandb_key>"
 
 STUDENT=/path/to/SFT/<model>/merged_best
 TEACHER=/path/to/SFT/<model>/full_finetuned/checkpoint-XXXX
