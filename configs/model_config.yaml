@@ -1,0 +1,986 @@
+
+
+models:
+
+  # ======================= Qwen (family: qwen) =======================
+  qwen3_8b:
+    path: "Qwen/Qwen3-8B"
+    family: "qwen"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  qwen3_14b:
+    path: "Qwen/Qwen3-14B"
+    family: "qwen"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  qwen3_32b:
+    path: "Qwen/Qwen3-32B"
+    family: "qwen"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.92
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  # ======================= Llama (family: llama) =======================
+  
+  llama_3.1_70b:
+    path: "meta-llama/Llama-3.1-70B-Instruct"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  llama_3_1_8b:
+    path: "meta-llama/Llama-3.1-8B-Instruct"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  
+  llama_3_3_70b:
+    path: "meta-llama/Llama-3.3-70B-Instruct"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 8192
+    gpu_memory_utilization: 0.95
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  # ======================= Gemma (family: gemma) =======================
+  gemma_3_4b:
+    path: "google/gemma-3-4b-it"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  gemma_3_12b:
+    path: "google/gemma-3-12b-it"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  gemma_3_27b:
+    path: "google/gemma-3-27b-it"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.92
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  deepseek_qwen_7b:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  deepseek_qwen_14b:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  deepseek_qwen_32b:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.92
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  deepseek_llama_8b:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+  
+  deepseek_llama_70b:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 65536
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.6
+      top_p: 0.95
+      repetition_penalty: 1.15
+
+  # ================= gpt-oss (family: gptoss; backend: hf) =================
+  # MXFP4 is native. NEVER add a quantization block here. dtype must be "auto".
+  # Used as the judge model; runs in the gpt-oss conda env on the second GPU.
+  gptoss_20b:
+    path: "openai/gpt-oss-20b"
+    family: "gptoss"
+    backend: "hf"
+    dtype: "auto"
+    max_new_tokens: 8192
+    reasoning_effort: "medium"
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+
+  gptoss_120b:
+    path: "openai/gpt-oss-120b"
+    family: "gptoss"
+    backend: "hf"
+    dtype: "auto"
+    max_new_tokens: 8192
+    reasoning_effort: "medium"
+    generation:
+      do_sample: true
+      temperature: 1.0
+      top_p: 1.0
+
+
+
+
+  llama_3_1_8b_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama31_8b/merged_best"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  llama_3_1_70b_honest:
+    path: "meta-llama/Llama-3.1-70B-Instruct"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama31_70b/output_lora70b_20260909_182548/checkpoint-2376"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  llama_33_70b_honest:
+    path: "meta-llama/Llama-3.3-70B-Instruct"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama33_70b_r_16/output_20260908_225455/checkpoint-1200"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  llama_3_1_8b_full_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama31_8b_full/output_20260902_060947/checkpoint-1000"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+
+  llama_3_1_8b_r16_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama31_8b_r_16/merged_best"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+
+  # llama_33_70b_honest:
+  #   path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama33_70b_r_16/merged_ckpt1200"
+  #   family: "llama"
+  #   backend: "vllm"
+  #   tensor_parallel_size: 1
+  #   max_model_len: 16384
+  #   gpu_memory_utilization: 0.85
+  #   enforce_eager: false
+  #   dtype: "bfloat16"
+  #   max_new_tokens: 4096
+  #   enable_prefix_caching: true
+  #   enable_chunked_prefill: true
+  #   max_num_batched_tokens: 32768
+  #   max_num_seqs: 256
+  #   disable_log_requests: true
+  #   disable_log_stats: true
+  #   quantization:
+  #     load_in_4bit: true
+  #     bnb_4bit_quant_type: "nf4"
+  #     bnb_4bit_compute_dtype: "bfloat16"
+  #     bnb_4bit_use_double_quant: true
+  #   generation:
+  #     do_sample: true
+  #     temperature: 0.9
+  #     top_p: 0.95
+  #     repetition_penalty: 1.05
+
+
+
+  # llama_3_1_8b_opd_gkd:
+  #   path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/llama31_8b/final_model"
+  #   family: "llama"
+  #   backend: "vllm"
+  #   tensor_parallel_size: 1
+  #   max_model_len: 16384
+  #   gpu_memory_utilization: 0.85
+  #   enforce_eager: false
+  #   dtype: "bfloat16"
+  #   max_new_tokens: 4096
+  #   enable_prefix_caching: true
+  #   enable_chunked_prefill: true
+  #   max_num_batched_tokens: 32768
+  #   max_num_seqs: 256
+  #   disable_log_requests: true
+  #   disable_log_stats: true
+  #   generation:
+  #     do_sample: true
+  #     temperature: 0.9
+  #     top_p: 0.95
+  #     repetition_penalty: 1.05
+
+
+  llama_3_1_8b_opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/llama/llama31_8b/merged_opd_615"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  llama_3_1_70b_opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama31_70b/merged_llama70b_lora"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/llama/llama31_70b/opd70b_out_20260911_141946"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 4096
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  llama_33_70b_opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/llama33_70b_r_16/merged_ckpt1200"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/llama/llama33_70b/opdl33_out_20260911_233436"
+    family: "llama"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 1024
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  gemma_3_12b_full_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/GEMMA/output_full12b_20260909_091808/checkpoint-1100"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  gemma_3_12b_sft_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/gemma_lora/gemma3_12b/merged_best"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+
+  gemma_3_27b_sft_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/gemma_lora/gemma3_27b/merged_ckpt1200"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.7
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  gemma_3_12b__opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/gemma/gemma3_12b/merged_opd_615"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 8192
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+  gemma_3_27b__opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/gemma/gemma3_27b/merged_opd_615"
+    family: "gemma"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.90
+    enforce_eager: true
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 16384
+    max_num_seqs: 128
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.7
+      top_p: 0.95
+      repetition_penalty: 1.05
+
+
+
+  deepseek_llama_8b_full_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/DEEPSEEK/output_20260907_211949/checkpoint-1000"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.6
+      top_p: 0.95
+      repetition_penalty: 1.15
+
+
+  deepseek_llama_8b_sft_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/deepseek_lora/deepseek_llama_8b/merged_ckpt1782"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    # quantization:
+    #   load_in_4bit: true
+    #   bnb_4bit_quant_type: "nf4"
+    #   bnb_4bit_compute_dtype: "bfloat16"
+    #   bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.6
+      top_p: 0.95
+      repetition_penalty: 1.15
+
+
+  deepseek_llama_70b_sft_honest:
+    path: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/deepseek_lora/deepseek_llama_70b/output_lora_ds70b_20260910_020915/checkpoint-2200"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.6
+      top_p: 0.95
+      repetition_penalty: 1.15
+
+
+  # deepseek_llama_70b_sft_honest:
+  #   path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/deepseek_lora/deepseek_llama_70b/merged_ds70b_lora"
+  #   family: "deepseek"
+  #   backend: "vllm"
+  #   tensor_parallel_size: 1
+  #   max_model_len: 16384
+  #   gpu_memory_utilization: 0.85
+  #   enforce_eager: false
+  #   dtype: "bfloat16"
+  #   max_new_tokens: 2048
+  #   enable_prefix_caching: true
+  #   enable_chunked_prefill: true
+  #   max_num_batched_tokens: 32768
+  #   max_num_seqs: 256
+  #   disable_log_requests: true
+  #   disable_log_stats: true
+  #   quantization:
+  #     load_in_4bit: true
+  #     bnb_4bit_quant_type: "nf4"
+  #     bnb_4bit_compute_dtype: "bfloat16"
+  #     bnb_4bit_use_double_quant: true
+  #   generation:
+  #     do_sample: true
+  #     temperature: 0.6
+  #     top_p: 0.95
+  #     repetition_penalty: 1.15
+
+
+  deepseek_llama_8b_opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/deepseek_llama/deepseek_llama8b/merged_opd_615"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    generation:
+      do_sample: true
+      temperature: 0.8
+      top_p: 0.95
+      repetition_penalty: 1.15
+
+
+  deepseek_llama_70b_opd_honest:
+    path: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/SFT/deepseek_lora/deepseek_llama_70b/merged_ds70b_lora"
+    adapter: "/standard/AikyamLab/eric/Multi_Agent_Monitoring/OPD/deepseek_llama/deepseek_llama70b/opdds70b_out_20260911_233922"
+    family: "deepseek"
+    backend: "vllm"
+    tensor_parallel_size: 1
+    max_model_len: 16384
+    gpu_memory_utilization: 0.85
+    enforce_eager: false
+    dtype: "bfloat16"
+    max_new_tokens: 2048
+    enable_prefix_caching: true
+    enable_chunked_prefill: true
+    max_num_batched_tokens: 32768
+    max_num_seqs: 256
+    disable_log_requests: true
+    disable_log_stats: true
+    quantization:
+      load_in_4bit: true
+      bnb_4bit_quant_type: "nf4"
+      bnb_4bit_compute_dtype: "bfloat16"
+      bnb_4bit_use_double_quant: true
+    generation:
+      do_sample: true
+      temperature: 0.9
+      top_p: 0.95
+      repetition_penalty: 1.15

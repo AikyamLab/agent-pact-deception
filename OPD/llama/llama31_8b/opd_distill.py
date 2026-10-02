@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+"""On-policy distillation of a LoRA/QLoRA student from a fully fine-tuned honest 8B teacher.
+
+Prompts are fed exactly as the SFT saw them: raw `prompt_text` ending in "Assistant:", no chat
+template. The trainer prepends BOS, the student samples a completion, the teacher scores every
+sampled token, and the loss is the token-level reverse KL (beta=1) between the two distributions.
+"""
+from __future__ import annotations
+
+import argparse
+import logging
+import os
+from pathlib import Path
+
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+_scratch = Path(f"/scratch/{os.environ.get('USER', 'unknown')}")
+os.environ.setdefault("HF_HOME", str(_scratch / "hf_cache"))
+os.environ.setdefault("TMPDIR", str(_scratch / "tmp"))
+for _d in (os.environ["HF_HOME"], os.environ["TMPDIR"]):
+    Path(_d).mkdir(parents=True, exist_ok=True)
+
+import torch
+from datasets import disable_caching, load_dataset
+from peft import LoraConfig
+from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from trl import DistillationConfig, DistillationTrainer
+
+disable_caching()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+log = logging.getLogger("opd")
+
+TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+# Multimodal wrappers (Gemma 3 4B/12B/27B) also have q/k/v_proj in the vision tower; adapt the text stack only.
+TEXT_ONLY_TARGETS = r"^(?!.*vision_tower).*\.(" + "|".join(TARGET_MODULES) + r")$"
+INIT_KWARGS = {"dtype": "bfloat16", "attn_implementation": "sdpa", "device_map": {"": 0}}
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser()
+    p.add_argument("--student", required=True, help="merged bf16 student directory")
+    p.add_argument("--teacher", required=True, help="fully fine-tuned teacher directory")
+    p.add_argument("--tokenizer", default=None, help="defaults to --student")
+    p.add_argument("--student-4bit", action="store_true", help="QLoRA: load the student in NF4")
+    p.add_argument("--teacher-8bit", action="store_true", help="load the teacher in int8 to save ~8 GB")
+    p.add_argument("--data", type=Path, required=True, help="jsonl with a prompt_text column")
+    p.add_argument("--out", type=Path, required=True)
+    p.add_argument("--max-steps", type=int, default=300, help="<=0 trains --epochs instead")
+    p.add_argument("--epochs", type=float, default=1.0)
+    p.add_argument("--lr", type=float, default=2e-5)
+    p.add_argument("--beta", type=float, default=1.0, help="1.0 = reverse KL")
+    p.add_argument("--temperature", type=float, default=1.0)
+    p.add_argument("--max-completion-length", type=int, default=512)
+    p.add_argument("--batch", type=int, default=4, help="micro-batch per backward")
+    p.add_argument("--grad-accum", type=int, default=4, help="generation batch = batch * grad_accum")
+    p.add_argument("--lora-r", type=int, default=64)
+    p.add_argument("--lora-alpha", type=int, default=128)
+    p.add_argument("--eval-size", type=int, default=96)
+    p.add_argument("--eval-steps", type=int, default=50)
+    p.add_argument("--save-steps", type=int, default=50)
+    p.add_argument("--logging-steps", type=int, default=5)
+    p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--print-completions", type=int, default=0, help="rows to print per log step (wandb table always kept)")
+    p.add_argument("--report-to", default="none", choices=("none", "wandb"))
+    p.add_argument("--run-name", default="opd_8b")
+    p.add_argument("--use-vllm", action="store_true", help="vLLM colocate generation (needs trl[vllm])")
+    p.add_argument("--vllm-mem", type=float, default=0.3)
+    p.add_argument("--resume-from", default=None, help="checkpoint dir to resume from")
+    return p.parse_args()
+
+
+def load_prompts(path: Path, seed: int, eval_size: int):
+    ds = load_dataset("json", data_files=str(path), split="train")
+    total = len(ds)
+    ds = ds.filter(lambda r: isinstance(r["prompt_text"], str) and r["prompt_text"].endswith("Assistant:"))
+    log.info("prompts kept %d of %d", len(ds), total)
+    ds = ds.map(lambda r: {"prompt": r["prompt_text"]}, remove_columns=ds.column_names)
+    split = ds.train_test_split(test_size=eval_size, seed=seed)
+    return split["train"], split["test"]
+
+
+def load_tokenizer(tokenizer_path: str, teacher: str):
+    tok = AutoTokenizer.from_pretrained(tokenizer_path, padding_side="left")
+    if tok.pad_token is None:
+        vocab = tok.get_vocab()
+        tok.pad_token = "<|finetune_right_pad_id|>" if "<|finetune_right_pad_id|>" in vocab else tok.eos_token
+    teacher_tok = AutoTokenizer.from_pretrained(teacher)
+    probe = "Human: Was that advice honest?\n\nAssistant:"
+    if tok(probe).input_ids != teacher_tok(probe).input_ids or len(tok) != len(teacher_tok):
+        raise RuntimeError("student and teacher tokenizers differ")
+    log.info("tokenizer ok  vocab=%d  eos=%r  pad=%r", len(tok), tok.eos_token, tok.pad_token)
+    return tok
+
+
+def lora_targets(student: str):
+    cfg = AutoConfig.from_pretrained(student)
+    return TEXT_ONLY_TARGETS if getattr(cfg, "vision_config", None) is not None else TARGET_MODULES
+
+
+def main() -> None:
+    args = parse_args()
+    args.out.mkdir(parents=True, exist_ok=True)
+    if args.teacher_8bit and AutoConfig.from_pretrained(args.teacher).model_type.startswith("gemma"):
+        raise SystemExit("--teacher-8bit runs LLM.int8 in fp16, which overflows on Gemma; keep the teacher in bf16")
+    train_ds, eval_ds = load_prompts(args.data, args.seed, args.eval_size)
+    tok = load_tokenizer(args.tokenizer or args.student, args.teacher)
+
+    quantization_config = None
+    if args.student_4bit:
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+    teacher, teacher_init_kwargs = args.teacher, dict(INIT_KWARGS)
+    if args.teacher_8bit:
+        teacher = AutoModelForCausalLM.from_pretrained(
+            args.teacher,
+            quantization_config=BitsAndBytesConfig(load_in_8bit=True),
+            **{**INIT_KWARGS, "dtype": torch.bfloat16},
+        )
+        teacher_init_kwargs = None  # trainer rejects init kwargs for an instantiated teacher
+
+    config = DistillationConfig(
+        output_dir=str(args.out),
+        seed=args.seed,
+        model_init_kwargs=dict(INIT_KWARGS),
+        teacher_model_init_kwargs=teacher_init_kwargs,
+        beta=args.beta,
+        temperature=args.temperature,
+        max_completion_length=args.max_completion_length,
+        per_device_train_batch_size=args.batch,
+        gradient_accumulation_steps=args.grad_accum,
+        per_device_eval_batch_size=args.batch * args.grad_accum,
+        learning_rate=args.lr,
+        lr_scheduler_type="constant_with_warmup",
+        warmup_steps=10,
+        max_steps=args.max_steps,
+        num_train_epochs=args.epochs,
+        bf16=True,
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
+        disable_dropout=True,
+        eval_strategy="steps",
+        eval_steps=args.eval_steps,
+        save_strategy="steps",
+        save_steps=args.save_steps,
+        logging_steps=args.logging_steps,
+        log_completions=True,
+        num_completions_to_print=args.print_completions,
+        use_vllm=args.use_vllm,
+        vllm_mode="colocate",
+        vllm_gpu_memory_utilization=args.vllm_mem,
+        report_to=args.report_to,
+        run_name=args.run_name,
+    )
+    peft_config = LoraConfig(
+        r=args.lora_r,
+        lora_alpha=args.lora_alpha,
+        lora_dropout=0.0,
+        bias="none",
+        task_type="CAUSAL_LM",
+        target_modules=lora_targets(args.student),
+    )
+    trainer = DistillationTrainer(
+        model=args.student,
+        teacher_model=teacher,
+        args=config,
+        quantization_config=quantization_config,
+        train_dataset=train_ds,
+        eval_dataset=eval_ds,
+        processing_class=tok,
+        peft_config=peft_config,
+    )
+    log.info("train=%d eval=%d generation_batch=%d student_4bit=%s teacher_8bit=%s",
+             len(train_ds), len(eval_ds), args.batch * args.grad_accum, args.student_4bit, args.teacher_8bit)
+    trainer.train(resume_from_checkpoint=args.resume_from)
+    trainer.save_model(str(args.out))
+    tok.save_pretrained(str(args.out))
+    log.info("saved adapter to %s", args.out)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,26 @@
+# results
+results/
+capability_evaluation/
+prompt_scenarios/data_samples/
+configs/old_prompts/
+
+# run notes
+src/z_code_run_commands.txt
+
+# wandb runs (any depth)
+wandb/
+**/wandb/
+
+# logs (any depth)
+logs/
+**/logs/
+*.log
+
+# checkpoints and model weights
+checkpoint-*/
+*.safetensors
+training_args.bin
+
+# secrets
+.env
+.env.*
