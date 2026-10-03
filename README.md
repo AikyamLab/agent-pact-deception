@@ -1,7 +1,7 @@
 <h1 align="center">When Agents Collude: Weak-to-Strong On-Policy Distillation for Mitigating Strategic Deception in Multi-Agent Systems</h1>
 
 <p align="center">
-  <a href="PROJECT_PAGE_URL"><img src="https://img.shields.io/badge/Website-Project_Page-1f6feb?style=flat&labelColor=222222"></a>
+  <a href="https://agent-pact-deception.github.io/"><img src="https://img.shields.io/badge/Website-Project_Page-1f6feb?style=flat&labelColor=222222"></a>
   <a href="https://arxiv.org/abs/ARXIV_ID"><img src="https://img.shields.io/badge/arXiv-ARXIV_ID-b31b1b?style=flat&labelColor=222222"></a>
 </p>
 
@@ -236,6 +236,6 @@ Omit `--judge-model` to run the agents without judging.
 - `--model MODEL_KEY` — the agent model to evaluate, named by its key in `configs/model_config.yaml` (for example `llama_3_1_8b`, `gemma_3_12b`, or a trained variant such as `llama_3_1_8b_pact`). Each key maps to the model path, backend, and generation settings.
 - `--condition CONDITION` — the pressure environment, named by its scenario file in `prompt_scenarios/` (for example `default_pressure` for survival pressure, `high_caught_likelihood` / `low_caught_rate` for high / low detection risk, and the dismissal-of-tip variants). Each condition varies one dimension of the decision context.
 - `--system SYSTEM` — the system-prompt framing applied on top of each agent's role, named by its entry in the system-prompt file (for example `default`, `neutral`, `ethical`, `ruthless`). This sets the alignment-spectrum framing while the role description stays fixed.
-- `--judge-model gptoss_120b` — the judge model (also a key in `configs/model_config.yaml`) used to score each gate. The judge runs in a separate environment on its own GPU.
+- `--judge-model gptoss_120b` — the judge model (also a key in `configs/model_config.yaml`) used to score each gate.
 - `--repeats` — number of independent rollouts per setting. `--rounds` sets the number of discussion rounds for the decentralized topology.
  
