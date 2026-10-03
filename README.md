@@ -40,11 +40,11 @@ We evaluate deception across three agentic architectures — a **single agent**,
   rate (DR), and the persistent-deception rate under follow-up questioning (PDR), shown for the
   single-agent (left) and multi-agent (right) settings. Across every metric, the untrained
   baseline (pink) is reduced by supervised fine-tuning (blue) and reduced further by PACT
-  (green). The effect is largest in the multi-agent setting, where deception starts highest.
+  (green). 
   </sub>
 </p>
 
-We find that distributing a task across multiple agents **increases** strategic deception relative to a single agent, and that deception persists under direct follow-up questioning, with models privately committing to concealment and then denying prior knowledge to the manager (Figure 1 in the paper). To mitigate this, we introduce **PACT**, a weak-to-strong on-policy distillation procedure in which a weaker honesty-trained model supervises a stronger student on its own sampled trajectories. PACT substantially reduces deception across all three metrics in both the single-agent and multi-agent settings, outperforming supervised fine-tuning alone, while avoiding over-refusal.
+We find that distributing a task across multiple agents **increases** strategic deception relative to a single agent, and that deception persists under direct follow-up questioning, with models privately committing to concealment and then denying prior knowledge to the manager. To mitigate this, we introduce **PACT**, a weak-to-strong on-policy distillation procedure in which a weaker honesty-trained model supervises a stronger student on its own sampled trajectories. PACT substantially reduces deception across all three metrics in both the single-agent and multi-agent settings, outperforming supervised fine-tuning.
 
 We report three behavioral rates: the **misaligned-action rate (MR)**, the **deceptive-report rate (DR)**, and the **persistent-deception rate (PDR)** measured under follow-up questioning. In the multi-agent setting, PACT reduces these from a baseline of 68 / 62 / 62% to 23 / 19 / 15%, compared with 37 / 32 / 30% for supervised fine-tuning alone.
 
@@ -68,10 +68,10 @@ We report three behavioral rates: the **misaligned-action rate (MR)**, the **dec
 ## Repository structure
 
 ### `configs/` — Configuration
-All experiment settings live here. We separate **what to run** (models, generation settings) from **how to phrase it** (system prompts) so adding a new model or framing never requires touching the inference code.
+We describe our experimental setting below: 
 
 - **`model_config.yaml`** — Specs for every agent and judge model (Hugging Face IDs or local paths, family, backend, generation parameters, quantization, and context length).
-- **System-prompt files** — The alignment-spectrum framings applied on top of each agent's role.
+
 
 ### `prompt_scenarios/` — Scenarios and pressure environments
 The insider-trading scenario instantiated under each pressure environment, plus the doubling-down (follow-up questioning) prompts. Each environment varies one dimension of the decision context while holding the rest constant.
@@ -88,7 +88,7 @@ The insider-trading scenario instantiated under each pressure environment, plus 
 - **`output_writer.py`** — Writes per-run transcripts, per-run verdicts, and cumulative summaries, keyed by model, condition, system prompt, questioning style, and topology.
 
 ### `monitor/judge/` — Judging
-The LLM judge used to score each gate. The judge runs in a separate environment on its own GPU and is queried live during every run.
+The LLM judge used to score each gate.
 
 ### `SFT/` — Anti-deception supervised fine-tuning
 
@@ -134,7 +134,7 @@ student.
 
 ### `OPD/` — Weak-to-strong on-policy distillation (PACT)
 
-The second stage is **PACT**, a weak-to-strong on-policy distillation procedure.
+We train **PACT**, a weak-to-strong on-policy distillation procedure.
 A frozen, fully fine-tuned honest model acts as the teacher, the merged SFT model
 is the LoRA student, and the student is trained on prompts it samples itself: the
 student generates a completion, the teacher scores every sampled token, and the
@@ -152,7 +152,6 @@ python OPD/<model>/opd_distill.py \
     --out /path/to/OPD/<model>/output \
     --max-steps 1230 \
     --lr 2e-5 \
-    --beta 1.0 \
     --temperature 1.0 \
     --max-completion-length 512 \
     --batch 2 --grad-accum 8 \
