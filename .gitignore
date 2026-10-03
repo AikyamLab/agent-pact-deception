@@ -4,6 +4,11 @@ capability_evaluation/
 prompt_scenarios/data_samples/
 configs/old_prompts/
 
+# merged models and training outputs
+merged_*/
+output_*/
+*_out_*/
+
 # run notes
 src/z_code_run_commands.txt
 
@@ -24,3 +29,11 @@ training_args.bin
 # secrets
 .env
 .env.*
+
+
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+keys_testing.txt
+
+completions/
